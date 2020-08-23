@@ -1,0 +1,22 @@
+.label-form-title {
+    font-size: 17px;
+    font-style: italic;
+}
+
+.card-body {
+    position: relative;
+}
+
+.wall-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.wall-block_item {
+    width: 15px;
+    height: 15px;
+}
+.pencil {
+    margin-right: 10px;
+}
