@@ -20,3 +20,32 @@
 .pencil {
     margin-right: 10px;
 }
+
+.field {
+    animation: rotate 3s linear infinite;
+    width: 40px;
+    height: 40px;
+}
+.block-field {
+    animation: move 8s linear alternate infinite;
+    width: 40px;
+    height: 40px;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes move {
+    from {
+        transform: translateX(0px)
+    }
+    to {
+        transform: translateX(300px)
+    }
+}

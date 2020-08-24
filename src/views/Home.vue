@@ -12,24 +12,29 @@
           </div>
         </form>
         <hr>
-        <div v-for="p in myPosts" :key="p.id" class="card mt-3">
-          <div class="card-body">
-
-            <div class="wall">
-              {{ p.text }}
-              <div class="wall-block">
-                <img @click="editWallPost(p)" class="wall-block_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
-                <img @click="deletePost(p.id)" class="wall-block_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+        <div v-if="myPosts.length">
+          <div v-for="p in myPosts" :key="p.id" class="card mt-3">
+            <div class="card-body">
+  
+              <div class="wall">
+                {{ p.text }}
+                <div class="wall-block">
+                  <img @click="editWallPost(p)" class="wall-block_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
+                  <img @click="deletePost(p.id)" class="wall-block_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                </div>
               </div>
+  
+              <div v-if="editPost === p" class="mt-2">
+                <textarea v-model="editText" class="form-control" id="wall" :rows="wallRows" ></textarea>
+                <button @click="updatePost" class="btn btn-primary mt-3 mb-2">Отредактировать</button>
+              </div>
+              
             </div>
-
-            <div v-if="editPost === p" class="mt-2">
-              <textarea v-model="editText" class="form-control" id="wall" :rows="wallRows" ></textarea>
-              <button @click="updatePost" class="btn btn-primary mt-3 mb-2">Отредактировать</button>
-            </div>
-            
           </div>
+          
         </div>
+        <div v-else><div class="block-field"><img class="field" src="../assets/поле.png" alt=""></div></div>
+        
         
       </div>
       
