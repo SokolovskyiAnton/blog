@@ -12,27 +12,25 @@
           </div>
         </form>
         <hr>
-
-        <div v-for="wallPost in wallPosts" :key="wallPost.id" class="card mt-3">
-
+        <div v-for="p in myPosts" :key="p.id" class="card mt-3">
           <div class="card-body">
 
             <div class="wall">
-              {{ wallPost.text }}
+              {{ p.text }}
               <div class="wall-block">
-                <img @click="editWallPost(wallPost)" class="wall-block_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
-                <img @click="deletePost(wallPost.id)" class="wall-block_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                <img @click="editWallPost(p)" class="wall-block_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
+                <img @click="deletePost(p.id)" class="wall-block_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
               </div>
             </div>
 
-            <div v-if="editPost === wallPost" class="mt-2">
+            <div v-if="editPost === p" class="mt-2">
               <textarea v-model="editText" class="form-control" id="wall" :rows="wallRows" ></textarea>
-              <button @click="addEditWallPost" class="btn btn-primary mt-3 mb-2">Отредактировать</button>
+              <button @click="updatePost" class="btn btn-primary mt-3 mb-2">Отредактировать</button>
             </div>
             
           </div>
-
         </div>
+        
       </div>
       
     </div>
@@ -47,8 +45,6 @@ export default {
   data() {
     return {
       wallRows: 1,
-      wallCount: 0,
-      wallPosts: [],
       wallPost: {
         text: ''
       },
@@ -60,29 +56,41 @@ export default {
     resizeRows() {
       this.wallRows = 3
     },
-    addWallPost() {
-      if (this.wallPost.text) {
-        this.wallCount++
 
-        this.wallPosts.unshift({
-          id: this.wallCount,
-          text: this.wallPost.text
-        })
+    addWallPost() {
+      const wallCount = Date.now()
+      
+      const wallPosts = {
+        id: wallCount,
+        text: this.wallPost.text
       }
+      this.$store.dispatch('createPost', wallPosts)
       this.wallPost.text = ''
     },
-    deletePost(id) {
-      const post_id = this.wallPosts.findIndex(post => post.id === id)
-      this.wallPosts.splice(post_id, 1)
+    updatePost() {
+      this.$store.dispatch('updatePost', {
+        id: this.editPost.id,
+        text: this.editText
+      })
     },
+
+    deletePost(id) {
+      const post_id = this.myPosts.findIndex(post => post.id === id)
+      this.myPosts.splice(post_id, 1)
+    },
+
     editWallPost(post) {
       this.editPost = post
       this.editText = post.text
-    },
-    addEditWallPost() {
-      this.editPost.text = this.editText
-      this.editPost = null
     }
+
+  },
+  computed: {
+
+    myPosts() {
+      return this.$store.getters.getPosts
+    }
+
   }
 }
 </script>
