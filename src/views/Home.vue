@@ -72,11 +72,14 @@ export default {
         id: this.editPost.id,
         text: this.editText
       })
+      this.editPost = null
     },
 
     deletePost(id) {
       const post_id = this.myPosts.findIndex(post => post.id === id)
-      this.myPosts.splice(post_id, 1)
+      this.$store.dispatch('deletePost', {
+        id: post_id
+      }) 
     },
 
     editWallPost(post) {
