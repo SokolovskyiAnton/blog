@@ -7,20 +7,22 @@
         <form @submit.prevent="addWallPost">
           <div class="form-group">
             <label class="label-form-title" for="wall">Создать запись</label>
-            <textarea :style="{backgroundColor: selected, color: selectedFont}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
+            <textarea :style="{backgroundColor: selected, color: selectedFont, fontSize: selectedSize + 'px'}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
             <div class="group-btn">
               <button type="submit" class="btn btn-primary mt-3 mb-2">Опубликовать</button>
               
               <button  @click="showColorBlock" type="button" class="btn btn-outline-success mt-3 mb-2 ml-2">{{editTextButton}}</button>
-              
             </div>
             <div class="color-block mt-2" v-if="colorBlock">
-                <div class="color-background">
+                <div class="block-width color-background">
                   <b-form-select v-model="selected" :options="options"></b-form-select>
-                  
                 </div>
-                <div class="color-text">
+                <div class="block-width color-text">
                   <b-form-select v-model="selectedFont" :options="optionsFont"></b-form-select>
+                </div>
+                <div class="block-width text-size">
+                  <label for="customRange1">Размер текста: {{selectedSize}}</label>
+                  <input type="range" class="custom-range" id="customRange1" min="15" max="40" v-model="selectedSize">
                 </div>
             </div>
           </div>
@@ -31,7 +33,6 @@
         <div v-if="myPosts.length">
           <div v-for="p in myPosts" :key="p.id" class="card mt-3">
             <div class="card-body" :style="p.style">
-  
               <div class="wall">
                 {{ p.text }}
                 <div class="wall-block">
@@ -47,13 +48,9 @@
               
             </div>
           </div>
-          
         </div>
         <div v-else><div class="block-field"><img class="field" src="../assets/поле.png" alt=""></div></div>
-        
-        
       </div>
-      
     </div>
   </div>
 </template>
@@ -74,13 +71,21 @@ export default {
       colorBlock: false,
       selected: null,
       selectedFont: null,
+      selectedSize: null,
       options: [
         { value: null, text: 'Цвет фона' },
-        { value: 'aqua', text: 'Aqua' }
+        { value: 'aqua', text: '' },
+        { value: 'darkred', text: '' },
+        { value: 'deeppink', text: '' },
+        { value: 'orangered', text: '' },
+        { value: 'yellow', text: '' }
         
       ],
       optionsFont: [
         { value: null, text: 'Цвет текста' },
+        { value: 'white', text: 'Белый' },
+        { value: 'darkred', text: 'Темно-красный' },
+        { value: 'yellow', text: 'Желтый' },
         { value: 'red', text: 'Красный' }
       ]
     }
@@ -104,6 +109,7 @@ export default {
         this.wallPost.text = ''
         this.selected = null
         this.selectedFont = null
+        this.selectedSize = '20'
       }
 
     },
@@ -138,15 +144,15 @@ export default {
       return this.$store.getters.getPosts
     },
     editTextButton() { // изменение кнопки при значении true/false
-      return this.colorBlock ? 'Закрыть': 'Выбрать цвет'
+      return this.colorBlock ? 'Закрыть': 'Настройки текста'
     },
     createStyle() { // извлечение выбранных свойств в блоке выбора цвета
       return {
         backgroundColor: this.selected,
-        color: this.selectedFont     
+        color: this.selectedFont,
+        fontSize: this.selectedSize + 'px'
       }
     }
-
   }
 }
 </script>

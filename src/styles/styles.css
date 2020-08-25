@@ -1,4 +1,6 @@
-
+.btn {
+    padding: 0.3rem 0.50rem;
+}
 .label-form-title {
     font-size: 17px;
     font-style: italic;
@@ -39,22 +41,48 @@
 
 .color-block {
     display: flex;
+    flex-wrap: wrap;
+
     border: 1px solid rgba(0, 0, 0, .2);
-    height: 100px;
+    height: auto;
     padding: 5px;
 }
-
+.block-width {
+    width: 160px;
+}
 .custom-select {
     width: 140px;
-    margin: 0 10px;
+    margin: 10px 0px;
 }
 
 
 .color-background .custom-select option:nth-child(2) {
     background-color: aqua;
 }
+.color-background .custom-select option:nth-child(3) {
+    background-color: darkred;
+}
+.color-background .custom-select option:nth-child(4) {
+    background-color: deeppink;
+}
+.color-background .custom-select option:nth-child(5) {
+    background-color: orangered;
+}
+.color-background .custom-select option:nth-child(6) {
+    background-color: yellow;
+}
+
 
 .color-text .custom-select option:nth-child(2) {
+    color: rgba(0, 0, 0, .2);
+}
+.color-text .custom-select option:nth-child(3) {
+    color: darkred;
+}
+.color-text .custom-select option:nth-child(4) {
+    color: Gold;
+}
+.color-text .custom-select option:nth-child(5) {
     color: red;
 }
 
