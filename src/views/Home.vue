@@ -1,16 +1,16 @@
 <template>
   <div class="container">
     <div class="row">
-
       <div class="col-sm-6 mx-auto mt-3">
-    
         <form @submit.prevent="addWallPost">
           <div class="form-group">
             <label class="label-form-title" for="wall">Создать запись</label>
+            
+            <b-form-datepicker id="example-datepicker" v-model="datePicker" class="mb-2" placeholder="Выберете дату"></b-form-datepicker>
+            
             <textarea :style="{backgroundColor: selected, color: selectedFont, fontSize: selectedSize + 'px'}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
             <div class="group-btn">
               <button type="submit" class="btn btn-primary mt-3 mb-2">Опубликовать</button>
-              
               <button  @click="showColorBlock" type="button" class="btn btn-outline-success mt-3 mb-2 ml-2">{{editTextButton}}</button>
             </div>
             <div class="color-block mt-2" v-if="colorBlock">
@@ -35,10 +35,21 @@
             <div class="card-body" :style="p.style">
               <div class="wall">
                 {{ p.text }}
-                <div class="wall-block">
-                  <img @click="editWallPost(p)" class="wall-block_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
-                  <img @click="deletePost(p.id)" class="wall-block_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                <div @click="openSettingsBlock(p)" class="block-points">
+                  <div class="points" :class="{active: p.settings}"></div>
                 </div>
+                
+                <div class="settings-block"  v-if="p.settings">
+                  <hr>
+                  <div class="settings-block-wrap">
+                    <div class="settings-block-date">{{p.date}}</div>
+                    <div class="settings-block-images">
+                    <img @click="editWallPost(p)" class="settings-block-images_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
+                    <img @click="deletePost(p.id)" class="settings-block-images_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                  </div>
+                  </div>
+                </div>
+                
               </div>
   
               <div v-if="editPost === p" class="mt-2">
@@ -87,7 +98,8 @@ export default {
         { value: 'darkred', text: 'Темно-красный' },
         { value: 'yellow', text: 'Желтый' },
         { value: 'red', text: 'Красный' }
-      ]
+      ],
+      datePicker: null
     }
   },
   methods: {
@@ -103,13 +115,18 @@ export default {
         const wallPosts = {
           id: wallPostId,
           text: this.wallPost.text,
-          style: objStyle
+          style: objStyle,
+          date: objStyle.date,
+          settings: false
+          
         }
+
         this.$store.dispatch('createPost', wallPosts)
         this.wallPost.text = ''
         this.selected = null
         this.selectedFont = null
         this.selectedSize = '20'
+        this.datePicker = null
       }
 
     },
@@ -135,6 +152,10 @@ export default {
     },
     showColorBlock() { // скрыть/показать блок с настройкой цвета
       this.colorBlock = !this.colorBlock 
+    },
+    openSettingsBlock(post) {
+      const arr = post
+      arr.settings = !arr.settings
     }
 
   },
@@ -150,7 +171,8 @@ export default {
       return {
         backgroundColor: this.selected,
         color: this.selectedFont,
-        fontSize: this.selectedSize + 'px'
+        fontSize: this.selectedSize + 'px',
+        date: this.datePicker
       }
     }
   }

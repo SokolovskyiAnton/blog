@@ -10,13 +10,55 @@
     position: relative;
 }
 
-.wall-block {
+.block-points {
     position: absolute;
     top: 0;
     right: 0;
+    cursor: pointer;
 }
 
-.wall-block_item {
+.points {
+    position: relative;
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    border-radius: 50%;
+    margin: 5px;
+}
+.points:before, .points:after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    left: -8px;
+    background-color: black;
+    border-radius: 50%;
+}
+.points:before {
+    left: -16px;
+}
+.points.active::before {
+    transform: translate(16px,20px);
+    transition: all 500ms ;
+}
+.points.active::after {
+    transform: translate(8px,10px);
+    transition: all 500ms ;
+}
+
+.settings-block-wrap {
+    display: flex;
+}
+.settings-block-date {
+    margin-right: auto;
+}
+
+.settings-block-images {
+    width: 60px;
+    margin-left: auto;
+}
+
+.settings-block-images_item {
     width: 15px;
     height: 15px;
 }
@@ -53,6 +95,9 @@
 .custom-select {
     width: 140px;
     margin: 10px 0px;
+}
+.active {
+    border-radius: 20px;
 }
 
 
