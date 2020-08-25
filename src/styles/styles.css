@@ -1,3 +1,4 @@
+
 .label-form-title {
     font-size: 17px;
     font-style: italic;
@@ -31,6 +32,32 @@
     width: 40px;
     height: 40px;
 }
+
+.group-btn {
+    display: flex;
+}
+
+.color-block {
+    display: flex;
+    border: 1px solid rgba(0, 0, 0, .2);
+    height: 100px;
+    padding: 5px;
+}
+
+.custom-select {
+    width: 140px;
+    margin: 0 10px;
+}
+
+
+.color-background .custom-select option:nth-child(2) {
+    background-color: aqua;
+}
+
+.color-text .custom-select option:nth-child(2) {
+    color: red;
+}
+
 
 @keyframes rotate {
     to {

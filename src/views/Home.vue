@@ -3,18 +3,34 @@
     <div class="row">
 
       <div class="col-sm-6 mx-auto mt-3">
-
+    
         <form @submit.prevent="addWallPost">
           <div class="form-group">
             <label class="label-form-title" for="wall">Создать запись</label>
-            <textarea @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
-            <button type="submit" class="btn btn-primary mt-3 mb-2">Опубликовать</button>
+            <textarea :style="{backgroundColor: selected, color: selectedFont}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
+            <div class="group-btn">
+              <button type="submit" class="btn btn-primary mt-3 mb-2">Опубликовать</button>
+              
+              <button  @click="showColorBlock" type="button" class="btn btn-outline-success mt-3 mb-2 ml-2">{{editTextButton}}</button>
+              
+            </div>
+            <div class="color-block mt-2" v-if="colorBlock">
+                <div class="color-background">
+                  <b-form-select v-model="selected" :options="options"></b-form-select>
+                  
+                </div>
+                <div class="color-text">
+                  <b-form-select v-model="selectedFont" :options="optionsFont"></b-form-select>
+                </div>
+            </div>
           </div>
         </form>
+
         <hr>
+
         <div v-if="myPosts.length">
           <div v-for="p in myPosts" :key="p.id" class="card mt-3">
-            <div class="card-body">
+            <div class="card-body" :style="p.style">
   
               <div class="wall">
                 {{ p.text }}
@@ -43,7 +59,7 @@
 </template>
 
 <script>
-// СДЕЛАТЬ возможность переноса текста 
+
 
 export default {
   name: 'Home',
@@ -54,7 +70,19 @@ export default {
         text: ''
       },
       editPost: {},
-      editText: ''
+      editText: '',
+      colorBlock: false,
+      selected: null,
+      selectedFont: null,
+      options: [
+        { value: null, text: 'Цвет фона' },
+        { value: 'aqua', text: 'Aqua' }
+        
+      ],
+      optionsFont: [
+        { value: null, text: 'Цвет текста' },
+        { value: 'red', text: 'Красный' }
+      ]
     }
   },
   methods: {
@@ -63,14 +91,21 @@ export default {
     },
 
     addWallPost() {
-      const wallCount = Date.now()
-      
-      const wallPosts = {
-        id: wallCount,
-        text: this.wallPost.text
+      if (this.wallPost.text) {
+        const wallPostId = Date.now()
+        const objStyle = this.createStyle
+        
+        const wallPosts = {
+          id: wallPostId,
+          text: this.wallPost.text,
+          style: objStyle
+        }
+        this.$store.dispatch('createPost', wallPosts)
+        this.wallPost.text = ''
+        this.selected = null
+        this.selectedFont = null
       }
-      this.$store.dispatch('createPost', wallPosts)
-      this.wallPost.text = ''
+
     },
     updatePost() {
       this.$store.dispatch('updatePost', {
@@ -78,6 +113,7 @@ export default {
         text: this.editText
       })
       this.editPost = null
+  
     },
 
     deletePost(id) {
@@ -90,13 +126,25 @@ export default {
     editWallPost(post) {
       this.editPost = post
       this.editText = post.text
+    },
+    showColorBlock() { // скрыть/показать блок с настройкой цвета
+      this.colorBlock = !this.colorBlock 
     }
 
   },
   computed: {
 
-    myPosts() {
+    myPosts() { // получение из стора постов
       return this.$store.getters.getPosts
+    },
+    editTextButton() { // изменение кнопки при значении true/false
+      return this.colorBlock ? 'Закрыть': 'Выбрать цвет'
+    },
+    createStyle() { // извлечение выбранных свойств в блоке выбора цвета
+      return {
+        backgroundColor: this.selected,
+        color: this.selectedFont     
+      }
     }
 
   }
