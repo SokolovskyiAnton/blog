@@ -4,15 +4,18 @@
       <div class="col-sm-6 mx-auto mt-3">
         <form @submit.prevent="addWallPost">
           <div class="form-group">
-            <label class="label-form-title" for="wall">Создать запись</label>
             
-            <b-form-datepicker id="example-datepicker" v-model="datePicker" class="mb-2" placeholder="Выберете дату"></b-form-datepicker>
-            
+            <label class="label-form-title" for="wall">Создать запись</label> 
             <textarea :style="{backgroundColor: selected, color: selectedFont, fontSize: selectedSize + 'px'}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
+
             <div class="group-btn">
               <button type="submit" class="btn btn-primary mt-3 mb-2">Опубликовать</button>
+
               <button  @click="showColorBlock" type="button" class="btn btn-outline-success mt-3 mb-2 ml-2">{{editTextButton}}</button>
+              
+              <button @click="sort = !sort" @mouseup="setSortPosts" type="button" class="sort-btn"><img class="sort-img" width="30px" height="30px" src="../assets/sort1.svg" alt="Сортировать" :class="{sort: sort}"></button>
             </div>
+
             <div class="color-block mt-2" v-if="colorBlock">
                 <div class="block-width color-background">
                   <b-form-select v-model="selected" :options="options"></b-form-select>
@@ -38,18 +41,18 @@
                 <div @click="openSettingsBlock(p)" class="block-points">
                   <div class="points" :class="{active: p.settings}"></div>
                 </div>
-                
-                <div class="settings-block"  v-if="p.settings">
-                  <hr>
-                  <div class="settings-block-wrap">
-                    <div class="settings-block-date">{{p.date}}</div>
-                    <div class="settings-block-images">
-                    <img @click="editWallPost(p)" class="settings-block-images_item pencil" src="../assets/icons8-pencil-24.png" alt="Редактировать">
-                    <img @click="deletePost(p.id)" class="settings-block-images_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                <transition name="fade">
+                  <div class="settings-block"  v-if="p.settings">
+                    <hr>
+                    <div class="settings-block-wrap">
+                      <div class="settings-block-date"><i>{{p.date.day}}.{{p.date.month}}.{{p.date.year}}</i><i class="ml-2">{{p.date.hours}}:{{p.  date.minutes}}</i></div>
+                      <div class="settings-block-images">
+                        <img @click="editWallPost(p)" class="settings-block-images_item pencil" src="../assets/icons8-pencil-24.png"   alt="Редактировать">
+                        <img @click="deletePost(p.id)" class="settings-block-images_item times" src="../assets/icons8-delete-26.png" alt="Удалить">
+                      </div>
+                    </div>
                   </div>
-                  </div>
-                </div>
-                
+                </transition>
               </div>
   
               <div v-if="editPost === p" class="mt-2">
@@ -73,6 +76,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      sort: false,
       wallRows: 1,
       wallPost: {
         text: ''
@@ -98,8 +102,7 @@ export default {
         { value: 'darkred', text: 'Темно-красный' },
         { value: 'yellow', text: 'Желтый' },
         { value: 'red', text: 'Красный' }
-      ],
-      datePicker: null
+      ]
     }
   },
   methods: {
@@ -111,16 +114,22 @@ export default {
       if (this.wallPost.text) {
         const wallPostId = Date.now()
         const objStyle = this.createStyle
-        
+        const newDate = new Date()
         const wallPosts = {
           id: wallPostId,
           text: this.wallPost.text,
           style: objStyle,
-          date: objStyle.date,
+          date: {
+            fullYear: newDate,
+            year: newDate.getFullYear(),
+            day: newDate.getDate(),
+            month: newDate.getMonth(),
+            hours: newDate.getHours(),
+            minutes: newDate.getMinutes()
+          },
           settings: false
           
         }
-
         this.$store.dispatch('createPost', wallPosts)
         this.wallPost.text = ''
         this.selected = null
@@ -156,8 +165,10 @@ export default {
     openSettingsBlock(post) {
       const arr = post
       arr.settings = !arr.settings
+    },
+    setSortPosts() {
+      this.myPosts.reverse()
     }
-
   },
   computed: {
 
@@ -175,7 +186,11 @@ export default {
         date: this.datePicker
       }
     }
+
   }
 }
 </script>
 
+<style scoped>
+
+</style>

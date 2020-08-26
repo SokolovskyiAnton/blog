@@ -33,6 +33,7 @@
     left: -8px;
     background-color: black;
     border-radius: 50%;
+    transition: all 500ms ;
 }
 .points:before {
     left: -16px;
@@ -44,6 +45,10 @@
 .points.active::after {
     transform: translate(8px,10px);
     transition: all 500ms ;
+}
+
+.settings-block {
+    transition: 1s;
 }
 
 .settings-block-wrap {
@@ -100,7 +105,31 @@
     border-radius: 20px;
 }
 
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+  }
+.fade-enter, .fade-leave-to  {
+    opacity: 0;
+}
 
+.sort-btn {
+    background-color: white;
+    border: none;
+    overflow: hidden;
+}
+
+.sort-btn:focus {
+    outline: none !important;
+}
+
+.sort-img {
+    transition: 1s;
+}
+
+.sort {
+    transform: rotate(180deg);
+    transition: 1s;
+}
 .color-background .custom-select option:nth-child(2) {
     background-color: aqua;
 }
