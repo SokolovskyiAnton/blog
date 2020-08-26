@@ -55,6 +55,7 @@
     display: flex;
 }
 .settings-block-date {
+    color: black !important;
     margin-right: auto;
 }
 
@@ -112,13 +113,13 @@
     opacity: 0;
 }
 
-.sort-btn {
+.btn-settings {
     background-color: white;
     border: none;
     overflow: hidden;
 }
 
-.sort-btn:focus {
+.btn-settings:focus {
     outline: none !important;
 }
 
@@ -129,6 +130,20 @@
 .sort {
     transform: rotate(180deg);
     transition: 1s;
+}
+
+.search-img {
+    transition: 1s;
+}
+
+.search {
+    transform: rotate(-45deg);
+    transition: 1s;
+}
+
+.search-block_input {
+    padding: 5px;
+    width: 100%;
 }
 .color-background .custom-select option:nth-child(2) {
     background-color: aqua;

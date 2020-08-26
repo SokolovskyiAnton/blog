@@ -4,7 +4,7 @@
       <div class="col-sm-6 mx-auto mt-3">
         <form @submit.prevent="addWallPost">
           <div class="form-group">
-            
+
             <label class="label-form-title" for="wall">Создать запись</label> 
             <textarea :style="{backgroundColor: selected, color: selectedFont, fontSize: selectedSize + 'px'}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
 
@@ -13,7 +13,8 @@
 
               <button  @click="showColorBlock" type="button" class="btn btn-outline-success mt-3 mb-2 ml-2">{{editTextButton}}</button>
               
-              <button @click="sort = !sort" @mouseup="setSortPosts" type="button" class="sort-btn"><img class="sort-img" width="30px" height="30px" src="../assets/sort1.svg" alt="Сортировать" :class="{sort: sort}"></button>
+              <button @click="sort = !sort" @mouseup="sortPosts" type="button" class="btn-settings"><img class="sort-img" width="30px" height="30px" src="../assets/sort1.svg" alt="Сортировать" :class="{sort: sort}"></button>
+              <button @click="search = !search" type="button" class="btn-settings"><img class="search-img" width="30px" height="30px" src="../assets/find.svg" alt="Сортировать" :class="{search: search}"></button>
             </div>
 
             <div class="color-block mt-2" v-if="colorBlock">
@@ -28,13 +29,18 @@
                   <input type="range" class="custom-range" id="customRange1" min="15" max="40" v-model="selectedSize">
                 </div>
             </div>
+
+            <div class="search-block mt-2" v-if="search">
+              <input class="search-block_input" type="text" v-model="textSearch" placeholder="Поиск..."/>
+            </div>
+
           </div>
         </form>
 
         <hr>
 
         <div v-if="myPosts.length">
-          <div v-for="p in myPosts" :key="p.id" class="card mt-3">
+          <div v-for="p in filteredList" :key="p.id" class="card mt-3">
             <div class="card-body" :style="p.style">
               <div class="wall">
                 {{ p.text }}
@@ -76,6 +82,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      textSearch: '',
       sort: false,
       wallRows: 1,
       wallPost: {
@@ -83,6 +90,7 @@ export default {
       },
       editPost: {},
       editText: '',
+      search: false,
       colorBlock: false,
       selected: null,
       selectedFont: null,
@@ -134,7 +142,7 @@ export default {
         this.wallPost.text = ''
         this.selected = null
         this.selectedFont = null
-        this.selectedSize = '20'
+        this.selectedSize = '15'
         this.datePicker = null
       }
 
@@ -159,25 +167,31 @@ export default {
       this.editPost = post
       this.editText = post.text
     },
+
     showColorBlock() { // скрыть/показать блок с настройкой цвета
       this.colorBlock = !this.colorBlock 
     },
+
     openSettingsBlock(post) {
       const arr = post
       arr.settings = !arr.settings
     },
-    setSortPosts() {
+
+    sortPosts() {
       this.myPosts.reverse()
     }
+
   },
   computed: {
 
     myPosts() { // получение из стора постов
       return this.$store.getters.getPosts
     },
+
     editTextButton() { // изменение кнопки при значении true/false
-      return this.colorBlock ? 'Закрыть': 'Настройки текста'
+      return this.colorBlock ? 'Закрыть': 'Настройки'
     },
+    
     createStyle() { // извлечение выбранных свойств в блоке выбора цвета
       return {
         backgroundColor: this.selected,
@@ -185,6 +199,14 @@ export default {
         fontSize: this.selectedSize + 'px',
         date: this.datePicker
       }
+    },
+    filteredList() {
+      const srchText = this.textSearch;
+      return this.myPosts.filter(function (elem) {
+       
+          if(srchText==='') return true;
+          else return elem.text.indexOf(srchText) > -1;
+      })
     }
 
   }
