@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Navbar/>
     <div class="row">
       <div class="col-sm-6 mx-auto mt-3">
         <form @submit.prevent="addWallPost">
@@ -76,10 +77,13 @@
 </template>
 
 <script>
-
+import Navbar from '../components/Navbar'
 
 export default {
   name: 'Home',
+  components: {
+    Navbar
+  },
   data() {
     return {
       textSearch: '',
@@ -204,7 +208,7 @@ export default {
       const srchText = this.textSearch;
       return this.myPosts.filter(function (elem) {
        
-          if(srchText==='') return true;
+          if (srchText==='') return true;
           else return elem.text.indexOf(srchText) > -1;
       })
     }
