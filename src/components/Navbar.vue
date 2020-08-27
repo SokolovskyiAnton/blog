@@ -8,7 +8,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <router-link  to="/" active-class="active"  exact class="nav-link">Создать</router-link>
+            <a @click="logout" class="nav-link">Выйти</a>
           </li>
         </ul>  
       </div>
@@ -17,7 +17,12 @@
 
 <script>
 export default {
-    
+    methods: {
+      async logout() {
+        await this.$store.dispatch('logout')
+        this.$router.push('/')
+      }
+    }
 }
 </script>
 

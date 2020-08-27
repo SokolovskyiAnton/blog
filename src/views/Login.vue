@@ -29,8 +29,18 @@ export default {
         }
     },
     methods: {
-        sendForm() {
-            console.log(1);
+    async sendForm() {
+            const formData = {
+
+                email: this.email,
+                password: this.password
+            }
+
+            try {
+                await this.$store.dispatch('login', formData)
+                this.$router.push('/home')
+            }
+            catch(e) {}
         }
     }
 

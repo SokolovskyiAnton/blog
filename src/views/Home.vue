@@ -1,6 +1,6 @@
 <template>
+<div><Navbar/>
   <div class="container">
-    <Navbar/>
     <div class="row">
       <div class="col-sm-6 mx-auto mt-3">
         <form @submit.prevent="addWallPost">
@@ -74,6 +74,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
