@@ -5,15 +5,46 @@
             <form @submit.prevent="register">
                 <div class="form-group">
                   <label for="idEmail">Почтовый ящик</label>
-                  <input v-model="email" type="email" class="form-control" id="idEmail" placeholder="Введите название">
+                  <input 
+                  @blur="$v.email.$touch()"
+                  @click="existUser - false"
+                   v-model="email"
+                   :class="{'is-invalid': $v.email.$error}" 
+                   type="email" class="form-control" id="idEmail" placeholder="Введите название">
+                   <div v-if="!$v.email.required" class="invalid-feedback">
+                        Поле должно быть заполнено.
+                    </div>
+                    <div v-if="!$v.email.email" class="invalid-feedback">
+                        Поле должно быть email адресом.
+                    </div>
+                    <div v-if="existUser" style="width: 100%;margin-top: 0.25rem;font-size: 80%;color: #dc3545;">
+                        Email уже занят.
+                    </div>
                 </div>
                 <div class="form-group">
                   <label for="idPassword">Пароль</label>
-                  <input v-model="password" type="password" class="form-control" id="idPassword" placeholder="Пароль">
+                  <input 
+                  @blur="$v.password.$touch()"
+                   v-model="password"
+                   :class="{'is-invalid': $v.password.$error}" 
+                   type="password" class="form-control" id="idPassword" placeholder="Пароль">
+                   <div v-if="!$v.password.required" class="invalid-feedback">
+                    Поле должно быть заполнено.
+                   </div>
+                   <div v-if="!$v.password.minLength" class="invalid-feedback">
+                       Не меньше 6 символов.
+                   </div>
                 </div>
                 <div class="form-group">
                   <label for="idname">Имя</label>
-                  <input v-model="name" type="text" class="form-control" id="idname" placeholder="Пароль">
+                  <input 
+                  @blur="$v.name.$touch()"
+                   v-model="name"
+                   :class="{'is-invalid': $v.name.$error}" 
+                   type="text" class="form-control" id="idname" placeholder="Пароль">
+                   <div v-if="!$v.name.required" class="invalid-feedback">
+                    Поле должно быть заполнено.
+                   </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
                 <p class="mt-3">Уже есть аккаунт ? <router-link to="/">Нажмите сюда</router-link> </p>
@@ -24,14 +55,22 @@
 </template>
 
 <script>
+import { required, email, helpers, minLength } from 'vuelidate/lib/validators'
+const alpha = helpers.regex('alpha', /^[a-zA-Zа-яёА-ЯЁ]*$/)
 export default {
     name: 'Login',
     data() {
         return {
             email: '',
             password: '',
-            name: ''
+            name: '',
+            existUser: false
         }
+    },
+    validations: {
+        email: {required, email},
+        password: {required, minLength: minLength(6)},
+        name: {required, alpha}
     },
     methods: {
         async register() {
@@ -46,6 +85,18 @@ export default {
                 this.$router.push('/home')
             }
             catch(e) {}
+        }
+    },
+    computed: {
+        error() {
+            return this.$store.getters.error 
+        }
+    },
+    watch: {
+        error(fbError) {
+            if (fbError.code = 'auth/email-already-in-use') {
+                this.existUser = true
+            }
         }
     }
 

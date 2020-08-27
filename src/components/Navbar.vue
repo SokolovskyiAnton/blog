@@ -10,7 +10,7 @@
           <li class="nav-item">
             <a @click="logout" class="nav-link">Выйти</a>
           </li>
-        </ul>  
+        </ul>
       </div>
     </nav>
 </template>
@@ -27,5 +27,7 @@ export default {
 </script>
 
 <style>
-
+.nav-link {
+  cursor: pointer;
+}
 </style>

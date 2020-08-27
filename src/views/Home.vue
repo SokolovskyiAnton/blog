@@ -5,7 +5,6 @@
       <div class="col-sm-6 mx-auto mt-3">
         <form @submit.prevent="addWallPost">
           <div class="form-group">
-
             <label class="label-form-title" for="wall">Создать запись</label> 
             <textarea :style="{backgroundColor: selected, color: selectedFont, fontSize: selectedSize + 'px'}" @click="resizeRows" placeholder="Что нового?" class="form-control" id="wall" :rows="wallRows" v-model="wallPost.text"></textarea>
 
@@ -213,7 +212,6 @@ export default {
           else return elem.text.indexOf(srchText) > -1;
       })
     }
-
   }
 }
 </script>

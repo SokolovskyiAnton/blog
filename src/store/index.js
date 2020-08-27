@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase, { database } from 'firebase/app'
+import firebase from 'firebase/app'
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    posts: JSON.parse(localStorage.getItem('wallPost') || '[]')
+    posts: JSON.parse(localStorage.getItem('wallPost') || '[]'),
+    error: null
   },
   mutations: {
     createPost(state, post) {
@@ -28,6 +30,12 @@ export default new Vuex.Store({
       const idx = posts.findIndex(p => p.id === id)
       state.posts.splice(posts[idx], 1)
       localStorage.setItem('wallPost', JSON.stringify(state.posts))
+    },
+    setError(state, error) {
+      state.error = error
+    },
+    clearError(state) {
+      state.error = null
     }
   },
   actions: {
@@ -45,11 +53,12 @@ export default new Vuex.Store({
       try {
         await firebase.auth().signInWithEmailAndPassword(email, password)
       } catch (e) {
+        commit('setError', e)
         throw e
       }
     },
 
-    async register({dispatch}, {email, password, name}) {
+    async register({dispatch, commit}, {email, password, name}) {
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
         const uid = await dispatch('getUid')
@@ -57,6 +66,7 @@ export default new Vuex.Store({
           name
         })
       } catch (e) {
+        commit('setError', e)
         throw e
       }
     },
@@ -71,6 +81,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    getPosts: s => s.posts
+    getPosts: s => s.posts,
+    error: s => s.error
   }
 })

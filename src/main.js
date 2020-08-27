@@ -7,9 +7,12 @@ import './styles/styles.css'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import Vuelidate from 'vuelidate'
+
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
+Vue.use(Vuelidate)
 
 firebase.initializeApp({
   apiKey: "AIzaSyD7rb6983rjo3cRYbXO5F0tChYcZ-qIpzs",
